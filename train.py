@@ -37,8 +37,6 @@ def run(epochs, batch_size, z_dim, display_step):
             my_utils.plot_images(train_images[0][:5])
             plt.show()
 
-
-
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
 
