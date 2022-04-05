@@ -4,6 +4,7 @@ from models.models import Generator, Discriminator
 import matplotlib.pyplot as plt
 import utils.utils as my_utils
 import argparse
+from tqdm import tqdm
 
 def run(epochs, batch_size, z_dim, display_step):
     (train_images, _), (__, ___) = keras.datasets.mnist.load_data()
@@ -18,7 +19,7 @@ def run(epochs, batch_size, z_dim, display_step):
 
     for epoch in range(epochs):
 
-        for image_batch in train_images:
+        for image_batch in tdqm(train_images):
             noise_batch = my_utils.get_noise(batch_size, z_dim)
 
             with tf.GradientTape() as tape:
