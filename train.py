@@ -19,7 +19,7 @@ def run(epochs, batch_size, z_dim, display_step):
 
     for epoch in range(epochs):
 
-        for image_batch in tdqm(train_images):
+        for image_batch in tqdm(train_images):
             noise_batch = my_utils.get_noise(batch_size, z_dim)
 
             with tf.GradientTape() as tape:
