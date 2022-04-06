@@ -25,14 +25,13 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
 
     for epoch in range(epochs):
 
-        print(f'Epoch: {epoch}', end='\t')
+        print(f'EPOCH [{epoch + 1}/{epochs}]')
 
         for image_batch in tqdm(train_images):
             noise_batch = my_utils.get_noise(batch_size, z_dim)
 
             with tf.GradientTape() as tape:
                 discriminator_loss = my_utils.get_discriminator_loss(generator, discriminator, loss_object, noise_batch, image_batch)
-                print(discriminator_loss.numpy())
             gradients = tape.gradient(discriminator_loss, discriminator.trainable_variables)
             optimizer.apply_gradients(zip(gradients, discriminator.trainable_variables))
 
@@ -41,7 +40,6 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
 
             with tf.GradientTape() as tape:
                 generator_loss = my_utils.get_generator_loss(generator, discriminator, loss_object, noise_batch)
-                print(generator_loss.numpy())
             gradients = tape.gradient(generator_loss, generator.trainable_variables)
             optimizer.apply_gradients(zip(gradients, generator.trainable_variables))
 
@@ -49,7 +47,7 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
             noise_batch = my_utils.get_noise(5, z_dim)
             fake_image_batch = generator(noise_batch)
             my_utils.plot_images(fake_image_batch)
-            plt.savefig(os.path.join('plots', ('000000' + str(epoch) + '.jpg')[-9:]))
+            plt.savefig(os.path.join('plots', ('000000' + str(epoch + 1) + '.jpg')[-9:]))
 
 
     generator.save('saved_model/generator')

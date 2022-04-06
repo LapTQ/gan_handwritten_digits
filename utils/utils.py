@@ -1,8 +1,8 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-def get_noise(batch_size, z_dim, seed=42):
-    return tf.random.normal(shape=(batch_size, z_dim), seed=seed)
+def get_noise(batch_size, z_dim):
+    return tf.random.normal(shape=(batch_size, z_dim))
 
 def get_generator_loss(generator, discriminator, loss_object, noise_batch):
     generator.trainable = True
