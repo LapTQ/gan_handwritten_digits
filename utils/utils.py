@@ -41,5 +41,5 @@ def plot_images(images):
     :return: None
     """
     collage = tf.concat([image for image in images], axis=1)
-    plt.imshow(collage)
+    plt.imshow(collage, cmap='gray')
 
