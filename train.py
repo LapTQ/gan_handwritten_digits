@@ -46,7 +46,7 @@ if __name__ == '__main__':
     ap.add_argument('--epochs', required=True, type=int)
     ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
-    ap.add_argument('--display-step', type=int, default=10)
+    ap.add_argument('--display-step', type=int, default=5)
 
     args = vars(ap.parse_args())
 
