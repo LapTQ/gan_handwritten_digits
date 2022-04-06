@@ -8,7 +8,14 @@ from tqdm import tqdm
 import os
 import shutil
 
-def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
+def run(size_in_batch,
+        batch_size,
+        epochs,
+        z_dim,
+        learning_rate,
+        display_step,
+        run_eagerly):
+
     tf.config.run_functions_eagerly(run_eagerly)
 
     (train_images, _), (__, ___) = keras.datasets.mnist.load_data()
@@ -21,7 +28,7 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
     discriminator = Discriminator()
 
     loss_object = keras.losses.BinaryCrossentropy(from_logits=False)
-    optimizer = keras.optimizers.Adam(0.00005)
+    optimizer = keras.optimizers.Adam(learning_rate)
 
     for epoch in range(epochs):
 
@@ -62,6 +69,7 @@ if __name__ == '__main__':
     ap.add_argument('--epochs', required=True, type=int)
     ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
+    ap.add_argument('--learning-rate', type=float, default=0.01)
     ap.add_argument('--display-step', type=int, default=5)
     ap.add_argument('--run-eagerly', type=bool, default=False)
 
@@ -72,7 +80,13 @@ if __name__ == '__main__':
     shutil.rmtree('plots', ignore_errors=True)
     os.system('mkdir plots')
 
-    run(args['size_in_batch'], args['batch_size'], args['epochs'], args['z_dim'], args['display_step'], args['run_eagerly'])
+    run(args['size_in_batch'],
+        args['batch_size'],
+        args['epochs'],
+        args['z_dim'],
+        args['learning_rate'],
+        args['display_step'],
+        args['run_eagerly'])
 
 
 
