@@ -11,7 +11,6 @@ def run(num_images):
     noise_batch = my_utils.get_noise(num_images, z_dim)
     fake_image_batch = generator(noise_batch)
     my_utils.plot_images(fake_image_batch)
-    plt.show()
 
 if __name__ == '__main__':
 

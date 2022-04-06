@@ -8,7 +8,9 @@ from tqdm import tqdm
 import os
 import shutil
 
-def run(size_in_batch, batch_size, epochs, z_dim, display_step):
+def run(size_in_batch, batch_size, epochs, z_dim, display_step, run_eagerly):
+    tf.config.run_functions_eagerly(run_eagerly)
+
     (train_images, _), (__, ___) = keras.datasets.mnist.load_data()
 
     train_images = train_images[:size_in_batch * batch_size]
@@ -43,16 +45,14 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step):
             noise_batch = my_utils.get_noise(5, z_dim)
             fake_image_batch = generator(noise_batch)
             my_utils.plot_images(fake_image_batch)
-            plt.show()
+            plt.savefig(os.path.join('plots', ('000000' + str(epoch) + '.jpg')[-9:]))
+
 
     generator.save('saved_model/generator')
     discriminator.save('saved_model/discriminator')
 
 
 if __name__ == '__main__':
-
-    shutil.rmtree('saved_model', ignore_errors=True)
-    os.system('mkdir saved_model')
 
     ap = argparse.ArgumentParser()
 
@@ -61,10 +61,16 @@ if __name__ == '__main__':
     ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
     ap.add_argument('--display-step', type=int, default=5)
+    ap.add_argument('--run-eagerly', type=bool, default=False)
 
     args = vars(ap.parse_args())
 
-    run(args['size_in_batch'], args['batch_size'], args['epochs'], args['z_dim'], args['display_step'])
+    shutil.rmtree('saved_model', ignore_errors=True)
+    os.system('mkdir saved_model')
+    shutil.rmtree('plots', ignore_errors=True)
+    os.system('mkdir plots')
+
+    run(args['size_in_batch'], args['batch_size'], args['epochs'], args['z_dim'], args['display_step'], args['run_eagerly'])
 
 
 
