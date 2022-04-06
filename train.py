@@ -13,15 +13,14 @@ def run(size_in_batch,
         epochs,
         z_dim,
         learning_rate,
+        k,
         display_step,
         run_eagerly):
 
     tf.config.run_functions_eagerly(run_eagerly)
 
     (train_images, _), (__, ___) = keras.datasets.mnist.load_data()
-
     train_images = train_images[:size_in_batch * batch_size]
-
     train_images = tf.reshape(train_images, (-1, batch_size, *train_images.shape[1:]))
 
     generator = Generator()
@@ -34,19 +33,32 @@ def run(size_in_batch,
 
         print(f'EPOCH [{epoch + 1}/{epochs}]')
 
+        print('LEARNING OF DISCRIMINATOR:')
         for image_batch in tqdm(train_images):
             noise_batch = my_utils.get_noise(batch_size, z_dim)
 
             with tf.GradientTape() as tape:
-                discriminator_loss = my_utils.get_discriminator_loss(generator, discriminator, loss_object, noise_batch, image_batch)
+                discriminator_loss = my_utils.get_discriminator_loss(
+                    generator,
+                    discriminator,
+                    loss_object,
+                    noise_batch,
+                    image_batch
+                )
             gradients = tape.gradient(discriminator_loss, discriminator.trainable_variables)
             optimizer.apply_gradients(zip(gradients, discriminator.trainable_variables))
 
-        for _ in range(6 * len(train_images)):
+        print('LEARNING OF GENERATOR:')
+        for _ in tqdm(range(k * len(train_images))):
             noise_batch = my_utils.get_noise(batch_size, z_dim)
 
             with tf.GradientTape() as tape:
-                generator_loss = my_utils.get_generator_loss(generator, discriminator, loss_object, noise_batch)
+                generator_loss = my_utils.get_generator_loss(
+                    generator,
+                    discriminator,
+                    loss_object,
+                    noise_batch
+                )
             gradients = tape.gradient(generator_loss, generator.trainable_variables)
             optimizer.apply_gradients(zip(gradients, generator.trainable_variables))
 
@@ -70,6 +82,7 @@ if __name__ == '__main__':
     ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
     ap.add_argument('--learning-rate', type=float, default=0.01)
+    ap.add_argument('--k', type=int, default=10)
     ap.add_argument('--display-step', type=int, default=5)
     ap.add_argument('--run-eagerly', type=bool, default=False)
 
@@ -85,8 +98,10 @@ if __name__ == '__main__':
         args['epochs'],
         args['z_dim'],
         args['learning_rate'],
+        args['k'],
         args['display_step'],
-        args['run_eagerly'])
+        args['run_eagerly']
+    )
 
 
 
