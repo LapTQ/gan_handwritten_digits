@@ -42,7 +42,7 @@ def run(size_in_batch, batch_size, epochs, z_dim, display_step):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
 
-    ap.add_argument('--size-in-batch', required=True, default=100, type=int)
+    ap.add_argument('--size-in-batch', default=100, type=int)
     ap.add_argument('--epochs', required=True, type=int)
     ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
