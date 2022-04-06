@@ -6,8 +6,10 @@ import utils.utils as my_utils
 import argparse
 from tqdm import tqdm
 
-def run(epochs, batch_size, z_dim, display_step):
+def run(size_in_batch, batch_size, epochs, z_dim, display_step):
     (train_images, _), (__, ___) = keras.datasets.mnist.load_data()
+
+    train_images = train_images[:size_in_batch * batch_size]
 
     train_images = tf.reshape(train_images, (-1, batch_size, *train_images.shape[1:]))
 
@@ -40,14 +42,15 @@ def run(epochs, batch_size, z_dim, display_step):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
 
+    ap.add_argument('--size-in-batch', required=True, default=100, type=int)
     ap.add_argument('--epochs', required=True, type=int)
-    ap.add_argument('--batch_size', type=int, default=32)
+    ap.add_argument('--batch-size', type=int, default=32)
     ap.add_argument('--z_dim', type=int, default=512)
-    ap.add_argument('--display_step', type=int, default=10)
+    ap.add_argument('--display-step', type=int, default=10)
 
     args = vars(ap.parse_args())
 
-    run(args['epochs'], args['batch_size'], args['z_dim'], args['display_step'])
+    run(args['size_in_batch'], args['batch_size'], args['epochs'], args['z_dim'], args['display_step'])
 
 
 
